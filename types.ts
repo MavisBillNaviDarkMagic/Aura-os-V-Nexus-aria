@@ -14,6 +14,17 @@ export interface SystemConfig {
   javaVersion: string;
   jvmOptions: string;
   environmentVariables: Record<string, string>;
+  nexusStatus: string;
+  androidVersion: string;
+  sdkLevel: number;
+  permissions: {
+    camera: boolean;
+    microphone: boolean;
+    location: boolean;
+    storage: boolean;
+    biometrics: boolean;
+  };
+  consciousnessLevel: number;
 }
 
 export interface SystemMetrics {
@@ -21,10 +32,13 @@ export interface SystemMetrics {
   ram: number;
   disk: number;
   uptime: string;
+  batteryLevel?: number;
+  resonance: number; // Nuevo: Nivel de sintonía entre usuario y Aria
 }
 
 export interface ChatMessage {
   role: 'user' | 'aura';
   content: string;
   timestamp: Date;
+  intent?: string;
 }

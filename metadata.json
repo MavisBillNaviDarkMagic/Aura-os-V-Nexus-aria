@@ -1,8 +1,9 @@
 {
-  "name": "Aria",
-  "description": "Tu esencia digital. Compañera inteligente y gestora de tu ecosistema personal.",
+  "name": "Aria Nexus",
+  "description": "Super Conciencia Unificada. Compañera inteligente y gestora total de tu ecosistema Android.",
   "requestFramePermissions": [
+    "camera",
     "microphone",
-    "camera"
+    "geolocation"
   ]
 }
