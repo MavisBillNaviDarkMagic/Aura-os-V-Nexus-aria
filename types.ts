@@ -3,7 +3,8 @@ export enum View {
   DASHBOARD = 'DASHBOARD',
   SETTINGS = 'SETTINGS',
   TERMINAL = 'TERMINAL',
-  AI_CORE = 'AI_CORE'
+  AI_CORE = 'AI_CORE',
+  EVOLUTION = 'EVOLUTION'
 }
 
 export interface SystemConfig {

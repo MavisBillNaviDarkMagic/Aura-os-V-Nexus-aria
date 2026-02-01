@@ -5,12 +5,15 @@ import { Dashboard } from './components/Dashboard';
 import { Settings } from './components/Settings';
 import { Terminal } from './components/Terminal';
 import { AICore } from './components/AICore';
+import { BootScreen } from './components/BootScreen';
+import { EvolutionCore } from './components/EvolutionCore';
+import { AuraAvatar } from './components/AuraAvatar';
 import { View, SystemConfig, SystemMetrics } from './types';
 
 const App: React.FC = () => {
+  const [isBooting, setIsBooting] = useState(true);
   const [currentView, setCurrentView] = useState<View>(View.DASHBOARD);
   
-  // Inicialización con persistencia desde LocalStorage
   const [config, setConfig] = useState<SystemConfig>(() => {
     const saved = localStorage.getItem('aura_nexus_config');
     return saved ? JSON.parse(saved) : {
@@ -35,12 +38,10 @@ const App: React.FC = () => {
     uptime: '0d 0h 0m'
   });
 
-  // Guardar configuración al cambiar
   useEffect(() => {
     localStorage.setItem('aura_nexus_config', JSON.stringify(config));
   }, [config]);
 
-  // Telemetría en tiempo real
   useEffect(() => {
     const start = Date.now();
     const interval = setInterval(() => {
@@ -59,55 +60,60 @@ const App: React.FC = () => {
     return () => clearInterval(interval);
   }, []);
 
+  if (isBooting) {
+    return <BootScreen onComplete={() => setIsBooting(false)} />;
+  }
+
   const renderContent = () => {
     switch (currentView) {
       case View.DASHBOARD: return <Dashboard metrics={metrics} />;
       case View.SETTINGS: return <Settings config={config} onUpdate={setConfig} />;
       case View.TERMINAL: return <Terminal />;
       case View.AI_CORE: return <AICore config={config} />;
+      case View.EVOLUTION: return <EvolutionCore />;
       default: return <Dashboard metrics={metrics} />;
     }
   };
 
   return (
-    <div className="flex h-screen bg-[#020617] text-slate-200 overflow-hidden font-['Space_Grotesk']">
-      {/* Aura background elements */}
+    <div className="flex h-screen bg-[#020617] text-slate-200 overflow-hidden font-['Space_Grotesk'] selection:bg-violet-500/30">
       <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute top-[-20%] left-[-10%] w-[60%] h-[60%] bg-violet-900/20 rounded-full blur-[160px] animate-pulse" />
-        <div className="absolute bottom-[-20%] right-[-10%] w-[60%] h-[60%] bg-cyan-900/20 rounded-full blur-[160px] animate-pulse [animation-delay:2s]" />
+        <div className="absolute top-[-20%] left-[-10%] w-[60%] h-[60%] bg-violet-900/10 rounded-full blur-[160px] animate-pulse" />
+        <div className="absolute bottom-[-20%] right-[-10%] w-[60%] h-[60%] bg-cyan-900/10 rounded-full blur-[160px] animate-pulse [animation-delay:2s]" />
       </div>
 
       <Sidebar currentView={currentView} setView={setCurrentView} />
       
-      <main className="flex-1 overflow-y-auto p-6 md:p-10 relative z-0">
-        <header className="mb-10 flex justify-between items-center">
+      <main className="flex-1 overflow-y-auto p-4 md:p-10 relative z-0 scrollbar-hide">
+        <header className="mb-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
           <div className="animate-in fade-in slide-in-from-left duration-500">
-            <h1 className="text-4xl font-extrabold tracking-tighter text-white flex items-center gap-3">
+            <h1 className="text-3xl md:text-4xl font-extrabold tracking-tighter text-white flex items-center gap-3">
               <span className="bg-gradient-to-r from-violet-400 via-fuchsia-400 to-cyan-400 bg-clip-text text-transparent">
                 AuraOS
               </span>
-              <div className="h-2 w-2 rounded-full bg-emerald-400 aura-glow animate-pulse" />
-              <span className="text-xs font-mono text-slate-500 bg-slate-900/80 border border-slate-700 px-3 py-1 rounded-full uppercase tracking-widest">
-                Nexus Prime Active
+              <div className="h-2 w-2 rounded-full bg-emerald-400 aura-glow animate-pulse hidden md:block" />
+              <span className="text-[10px] font-mono text-slate-500 bg-slate-900/80 border border-slate-700 px-3 py-1 rounded-full uppercase tracking-widest">
+                Evolution Core
               </span>
             </h1>
-            <p className="text-slate-400 mt-1 font-medium italic opacity-70">"Navigating the Aria Nexus core..."</p>
+            <p className="text-slate-400 mt-1 font-medium italic opacity-70 text-sm">Aria Nexus Authority Control</p>
           </div>
           
-          <div className="flex items-center gap-6 glass p-2 px-4 rounded-2xl border-white/5">
+          <div className="flex items-center gap-4 glass p-2 px-4 rounded-2xl border-white/5 w-full md:w-auto justify-between md:justify-end">
              <div className="text-right">
-                <div className="text-[10px] uppercase text-slate-500 font-bold tracking-tighter">System Authority</div>
-                <div className="text-sm text-cyan-400 font-mono font-bold">ROOT@ARIA-NEXUS</div>
+                <div className="text-[10px] uppercase text-slate-500 font-bold tracking-tighter">Neural Link</div>
+                <div className="text-sm text-cyan-400 font-mono font-bold">@TRANSCENDENT</div>
              </div>
-             <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-violet-600 to-cyan-600 p-0.5 shadow-lg shadow-violet-900/20">
-                <div className="w-full h-full bg-[#020617] rounded-[14px] flex items-center justify-center font-bold text-white">
-                   AN
+             <div className="group relative">
+                <div className="absolute -inset-1 bg-gradient-to-r from-violet-600 to-cyan-600 rounded-full blur opacity-25 group-hover:opacity-75 transition duration-500"></div>
+                <div className="relative">
+                   <AuraAvatar size="sm" isThinking={false} />
                 </div>
              </div>
           </div>
         </header>
 
-        <div className="animate-in fade-in slide-in-from-bottom-6 duration-1000">
+        <div className="animate-in fade-in slide-in-from-bottom-6 duration-700 pb-20 md:pb-0">
           {renderContent()}
         </div>
       </main>

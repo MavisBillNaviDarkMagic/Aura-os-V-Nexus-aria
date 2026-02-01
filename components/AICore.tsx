@@ -1,8 +1,9 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { GoogleGenAI } from "@google/genai";
-import { Send, Bot, User, Sparkles, Terminal as TermIcon, ShieldAlert } from 'lucide-react';
+import { Send, User, Sparkles, Terminal as TermIcon, ShieldAlert } from 'lucide-react';
 import { SystemConfig, ChatMessage } from '../types';
+import { AuraAvatar } from './AuraAvatar';
 
 interface AICoreProps {
   config: SystemConfig;
@@ -69,18 +70,14 @@ export const AICore: React.FC<AICoreProps> = ({ config }) => {
 
   return (
     <div className="glass rounded-[3rem] border border-white/10 flex flex-col h-[calc(100vh-280px)] overflow-hidden shadow-2xl relative">
-      <div className="absolute top-0 right-0 p-10 pointer-events-none opacity-[0.03]">
-        <Bot size={300} className="text-white" />
+      {/* Background Avatar Decoration */}
+      <div className="absolute top-0 right-0 p-10 pointer-events-none opacity-[0.05]">
+        <AuraAvatar size="xl" isThinking={isLoading} />
       </div>
 
       <div className="p-6 border-b border-white/10 flex items-center justify-between bg-white/[0.02] backdrop-blur-xl z-10">
          <div className="flex items-center gap-5">
-            <div className="relative group">
-               <div className="absolute -inset-1 bg-gradient-to-r from-violet-600 to-cyan-600 rounded-full blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-pulse"></div>
-               <div className="relative w-14 h-14 bg-slate-900 rounded-full flex items-center justify-center border border-white/10">
-                  <Bot size={28} className="text-violet-400" />
-               </div>
-            </div>
+            <AuraAvatar size="md" isThinking={isLoading} />
             <div>
               <div className="font-extrabold text-lg tracking-tight text-white">Aura Core Intelligence</div>
               <div className="text-[10px] text-cyan-400 font-mono flex items-center gap-2 font-bold uppercase tracking-widest">
@@ -90,9 +87,9 @@ export const AICore: React.FC<AICoreProps> = ({ config }) => {
             </div>
          </div>
          <div className="flex gap-3">
-            <div className="px-3 py-1 bg-slate-800/80 rounded-full border border-white/5 flex items-center gap-2">
+            <div className="px-4 py-2 bg-slate-800/80 rounded-full border border-white/5 flex items-center gap-2">
                <ShieldAlert size={12} className="text-amber-400" />
-               <span className="text-[9px] font-bold text-slate-400 uppercase">Neural Load: 12%</span>
+               <span className="text-[9px] font-bold text-slate-400 uppercase tracking-tighter">Neural Load: {isLoading ? '84%' : '12%'}</span>
             </div>
          </div>
       </div>
@@ -101,10 +98,14 @@ export const AICore: React.FC<AICoreProps> = ({ config }) => {
         {messages.map((msg, i) => (
           <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'} animate-in fade-in zoom-in duration-300`}>
             <div className={`flex gap-4 max-w-[85%] ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}>
-              <div className={`w-10 h-10 rounded-2xl shrink-0 flex items-center justify-center shadow-lg ${
-                msg.role === 'user' ? 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/30' : 'bg-violet-500/20 text-violet-400 border border-violet-500/30'
-              }`}>
-                {msg.role === 'user' ? <User size={18} /> : <Bot size={18} />}
+              <div className="shrink-0 pt-1">
+                {msg.role === 'user' ? (
+                  <div className="w-10 h-10 rounded-2xl bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 flex items-center justify-center shadow-lg">
+                    <User size={18} />
+                  </div>
+                ) : (
+                  <AuraAvatar size="sm" isThinking={false} />
+                )}
               </div>
               <div className={`p-6 rounded-[2rem] text-sm leading-relaxed shadow-xl ${
                 msg.role === 'user' 
@@ -114,7 +115,7 @@ export const AICore: React.FC<AICoreProps> = ({ config }) => {
                 {msg.content}
                 <div className="text-[9px] mt-4 opacity-40 font-mono font-bold flex items-center gap-2">
                   <div className={`w-1 h-1 rounded-full ${msg.role === 'user' ? 'bg-cyan-400' : 'bg-violet-400'}`} />
-                  {msg.timestamp.toLocaleTimeString()} // LOG_ID: {Math.random().toString(16).slice(2,8).toUpperCase()}
+                  {msg.timestamp.toLocaleTimeString()} // ID: {Math.random().toString(16).slice(2,8).toUpperCase()}
                 </div>
               </div>
             </div>
@@ -123,9 +124,7 @@ export const AICore: React.FC<AICoreProps> = ({ config }) => {
         {isLoading && (
           <div className="flex justify-start">
             <div className="flex gap-4">
-               <div className="w-10 h-10 rounded-2xl bg-violet-500/10 flex items-center justify-center animate-pulse border border-violet-500/20">
-                  <Bot size={18} className="text-violet-400" />
-               </div>
+               <AuraAvatar size="sm" isThinking={true} />
                <div className="bg-slate-800/40 p-6 rounded-[2rem] rounded-tl-none border border-white/5">
                   <div className="flex gap-1.5">
                     <div className="w-2 h-2 rounded-full bg-violet-400 animate-bounce" />

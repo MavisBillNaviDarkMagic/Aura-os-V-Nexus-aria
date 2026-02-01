@@ -1,6 +1,6 @@
 {
-  "name": "AuraOS - Aria Nexus",
-  "description": "A futuristic OS management dashboard featuring advanced system configurations for Java, Gradle, and AI-driven diagnostics powered by Gemini.",
+  "name": "AuraOS Nexus APK",
+  "description": "The definitive Aria Nexus OS experience. Pro-level system management, high-performance Java/Gradle integration, and Aura AI Core.",
   "requestFramePermissions": [
     "microphone"
   ]
